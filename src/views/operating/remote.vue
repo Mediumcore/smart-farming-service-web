@@ -856,7 +856,7 @@ export default {
     createVelocityChart() {
       velocityOption = {
         tooltip: {
-          formatter: '{b} : {c}m/s'
+          formatter: '{b} : {c}km/h'
         },
         series: [
           {
@@ -881,7 +881,7 @@ export default {
               width: 4
             },
             detail: {
-              formatter: '{value}m/s',
+              formatter: '{value}km/h',
               offsetCenter: ['0%', '40%'],
               textStyle: {
                 // 其余属性默认使用全局文本样式，详见TEXTSTYLE
