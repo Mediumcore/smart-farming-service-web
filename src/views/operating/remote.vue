@@ -51,17 +51,17 @@
           <el-col :lg="6" style="margin-top: 3px">
             <el-divider direction="vertical"></el-divider>
             <el-button type="success" plain size="small" @click="handleTraceDialog"
-                       :disabled="!isConnect||tracking.disabled">寻迹
+                       :disabled="!isConnect||tracking.disabled">循迹
             </el-button>
-            <el-button type="primary" plain size="small" @click="handleParallelDrive"
-                       :disabled="!isConnect||operating.disabled">驾驶
-            </el-button>
+<!--            <el-button type="primary" plain size="small" @click="handleParallelDrive"-->
+<!--                       :disabled="!isConnect||operating.disabled">驾驶-->
+<!--            </el-button>-->
             <el-button type="warning" plain size="small" @click="handleStandby"
                        :disabled="!isConnect||standby.disabled">停止
             </el-button>
-            <el-button type="danger" plain size="small" @click="handleShutdown"
-                       :disabled="!isConnect||shutdown.disabled">关机
-            </el-button>
+<!--            <el-button type="danger" plain size="small" @click="handleShutdown"-->
+<!--                       :disabled="!isConnect||shutdown.disabled">关机-->
+<!--            </el-button>-->
             <el-divider direction="vertical"></el-divider>
           </el-col>
           <div style="margin-top: 10px;float: right;margin-right: 10px">
@@ -94,7 +94,7 @@
             <el-tab-pane label="实时地图" :style="{height:winHeight-240+'px'}">
               <real-time-map :cId="channelId+'-map'"></real-time-map>
             </el-tab-pane>
-            <el-tab-pane label="寻迹路线" :style="{height:winHeight-240+'px'}">
+            <el-tab-pane label="循迹路线" :style="{height:winHeight-240+'px'}">
               <trace-monitor :cId="channelId+'-trace'"></trace-monitor>
             </el-tab-pane>
             <el-tab-pane label="监控视频" :style="{height:winHeight-240+'px'}">
@@ -103,31 +103,31 @@
           </el-tabs>
         </el-col>
         <el-col :lg="5" style="height: 100%;overflow-y: auto">
-          <el-row style="height: 220px; margin: 6px">
-            <div class="metric-chart" id="leftVelocityChart"></div>
-          </el-row>
-          <el-row style="height: 220px; margin: 6px">
-            <div class="metric-chart" id="rightVelocityChart"></div>
-          </el-row>
+<!--          <el-row style="height: 220px; margin: 6px">-->
+<!--            <div class="metric-chart" id="leftVelocityChart"></div>-->
+<!--          </el-row>-->
+<!--          <el-row style="height: 220px; margin: 6px">-->
+<!--            <div class="metric-chart" id="rightVelocityChart"></div>-->
+<!--          </el-row>-->
           <el-row style="height: 220px; margin: 6px">
             <div class="metric-chart" id="velocityChart"></div>
           </el-row>
           <el-row style="height: 220px; margin: 6px">
-            <div class="metric-chart" id="powerChart"></div>
+            <div class="metric-chart" id="steeringChart"></div>
           </el-row>
         </el-col>
 
       </el-row>
 
     </div>
-    <!-- 寻迹路线下发Dialog -->
-    <el-dialog title="寻迹路线下发" :visible.sync="tracking.dialog">
+    <!-- 循迹路线下发Dialog -->
+    <el-dialog title="循迹路线下发" :visible.sync="tracking.dialog">
       <el-form :model="tracking" :rules="trackingFormRules" ref="trackingForm">
-        <el-form-item label="寻迹速度" prop="speed">
+        <el-form-item label="循迹速度" prop="speed">
           <el-input v-model="tracking.speed"></el-input>
         </el-form-item>
-        <el-form-item label="寻迹路线" prop="route">
-          <el-select v-model="tracking.route" placeholder="请选择寻迹路线">
+        <el-form-item label="循迹路线" prop="route">
+          <el-select v-model="tracking.route" placeholder="请选择循迹路线">
             <el-option
               v-for="item in tracking.routes"
               :key="item.id"
@@ -175,6 +175,8 @@ let leftVelocityChart = null
 let rightVelocityChart = null
 let velocityChart = null
 let velocityOption = null
+let steeringChart = null
+let steeringOption = null
 let powerOption = null
 let powerChart = null
 export default {
@@ -250,14 +252,14 @@ export default {
       },
       trackingFormRules: {
         speed: [
-          { required: true, message: '请输入寻迹速度', trigger: 'blur' }
+          { required: true, message: '请输入循迹速度', trigger: 'blur' }
         ],
         route: [
-          { required: true, message: '请选择寻迹路线', trigger: 'blur' }
+          { required: true, message: '请选择循迹路线', trigger: 'blur' }
         ]
       },
       deviceDetail: null,
-      // 寻迹路线缓存
+      // 循迹路线缓存
       traceRoute: null,
       eventHandlers: {},
       channels: {
@@ -383,7 +385,7 @@ export default {
 
     },
     broadcastTraceLines() {
-      // 判断当前是否有寻迹路线的缓存，有的话发送
+      // 判断当前是否有循迹路线的缓存，有的话发送
       this.tracking.route && this.channels['trace'].postMessage({
         type: 'trace-lines',
         data: this.tracking.route
@@ -631,7 +633,7 @@ export default {
       // 位置事件处理器
       this.eventHandlers['location'] = async event => {
         let data = JSON.parse(event['body'])
-        // 发送给寻迹监控Channel
+        // 发送给循迹监控Channel
         this.channels['trace'] && this.channels['trace'].postMessage({
           type: 'location',
           data: data
@@ -650,19 +652,19 @@ export default {
         this.signal = parseInt(event['body'])
       }
       // 左侧履带车速事件处理器
-      this.eventHandlers['left-track-velocity'] = async event => {
-        if (leftVelocityOption != null && leftVelocityChart != null) {
-          leftVelocityOption.series[0].data[0].value = parseFloat(event['body'])
-          leftVelocityChart.setOption({ series: leftVelocityOption.series })
-        }
-      }
+      // this.eventHandlers['left-track-velocity'] = async event => {
+      //   if (leftVelocityOption != null && leftVelocityChart != null) {
+      //     leftVelocityOption.series[0].data[0].value = parseFloat(event['body'])
+      //     leftVelocityChart.setOption({ series: leftVelocityOption.series })
+      //   }
+      // }
       // 右侧履带车速事件处理器
-      this.eventHandlers['right-track-velocity'] = async event => {
-        if (rightVelocityOption != null && rightVelocityChart != null) {
-          rightVelocityOption.series[0].data[0].value = parseFloat(event['body'])
-          rightVelocityChart.setOption({ series: rightVelocityOption.series })
-        }
-      }
+      // this.eventHandlers['right-track-velocity'] = async event => {
+      //   if (rightVelocityOption != null && rightVelocityChart != null) {
+      //     rightVelocityOption.series[0].data[0].value = parseFloat(event['body'])
+      //     rightVelocityChart.setOption({ series: rightVelocityOption.series })
+      //   }
+      // }
 
       // 车速事件处理器
       this.eventHandlers['velocity'] = async event => {
@@ -672,13 +674,21 @@ export default {
         }
       }
 
-      // 电量事件处理器
-      this.eventHandlers['power'] = async event => {
-        if (powerOption != null && powerChart != null) {
-          powerOption.series[0].data[0].value = parseInt(event['body'])
-          powerChart.setOption({ series: powerOption.series })
+      // 方向盘转角事件处理器
+      this.eventHandlers['steering'] = async event =>{
+        if (steeringOption != null && steeringChart != null) {
+          steeringOption.series[0].data[0].value = parseFloat(event['body'])
+          steeringChart.setOption({ series: steeringOption.series })
         }
       }
+
+      // 电量事件处理器
+      // this.eventHandlers['power'] = async event => {
+      //   if (powerOption != null && powerChart != null) {
+      //     powerOption.series[0].data[0].value = parseInt(event['body'])
+      //     powerChart.setOption({ series: powerOption.series })
+      //   }
+      // }
 
       // 上线事件
       this.eventHandlers['online'] = async event => {
@@ -698,10 +708,11 @@ export default {
       }
     },
     initCharts() {
-      this.createLeftVelocityChart()
-      this.createRightVelocityChart()
+      // this.createLeftVelocityChart()
+      // this.createRightVelocityChart()
       this.createVelocityChart()
-      this.createPowerChart()
+      this.createSteeringChart()
+      // this.createPowerChart()
     },
     createLeftVelocityChart() {
       leftVelocityOption = {
@@ -856,7 +867,7 @@ export default {
     createVelocityChart() {
       velocityOption = {
         tooltip: {
-          formatter: '{b} : {c}m/s'
+          formatter: '{b} : {c}km/h'
         },
         series: [
           {
@@ -881,7 +892,7 @@ export default {
               width: 4
             },
             detail: {
-              formatter: '{value}m/s',
+              formatter: '{value}km/h',
               offsetCenter: ['0%', '40%'],
               textStyle: {
                 // 其余属性默认使用全局文本样式，详见TEXTSTYLE
@@ -923,12 +934,87 @@ export default {
             radius: '98%',
             data: [{ value: 0, name: '车速' }],
             min: 0,
-            max: 2
+            max: 60
           }
         ]
       }
       velocityChart = echarts.init(document.getElementById('velocityChart'))
       velocityChart.setOption(velocityOption)
+    },
+    createSteeringChart(){
+      steeringOption = {
+        tooltip: {
+          formatter: '{b} : {c}%'
+        },
+        series: [
+          {
+            name: '方向盘转角',
+            title: {
+              show: true,
+              offsetCenter: ['0%', '-35%'],
+              textStyle: {
+                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                fontSize: 14,
+                // fontStyle: "italic",
+                // color: [[0.09, "#3EB278"], [0.82, "#4C8FD5"], [1, "#ff4500"]],
+                color: '#1C1C1C',
+                transparent: true,
+                shadowColor: '#fff' // 默认透明
+                // shadowBlur: 10
+              }
+            },
+            pointer: {
+              width: 4
+            },
+            detail: {
+              formatter: '{value}%',
+              offsetCenter: ['0%', '40%'],
+              textStyle: {
+                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                fontWeight: 'bolder',
+                fontSize: 16
+              }
+            },
+
+            axisLabel: {
+              // 坐标轴小标记
+              textStyle: {
+                // 属性lineStyle控制线条样式
+                fontWeight: 'bolder'
+              }
+            },
+            axisLine: {
+              // 坐标轴线
+              lineStyle: {
+                // 属性lineStyle控制线条样式
+                color: [
+                  [0.2, '#F44336'],
+                  [0.8, '#03A9F4'],
+                  [1, '#F44336']
+                ],
+                shadowColor: '#fff', // 默认透明
+                width: 6
+              }
+            },
+            splitLine: {
+              // 分隔线
+              length: 10, // 属性length控制线长
+              lineStyle: {
+                // 属性lineStyle（详见lineStyle）控制线条样式
+                // color: "auto"
+              }
+            },
+            center: ['50%', '55%'],
+            type: 'gauge',
+            radius: '98%',
+            data: [{ value: 0, name: '方向盘转角' }],
+            min: -500,
+            max: 500
+          }
+        ]
+      }
+      steeringChart = echarts.init(document.getElementById('steeringChart'))
+      steeringChart.setOption(steeringOption)
     },
     createPowerChart() {
       powerOption = {
