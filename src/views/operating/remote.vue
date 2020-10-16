@@ -51,17 +51,17 @@
           <el-col :lg="6" style="margin-top: 3px">
             <el-divider direction="vertical"></el-divider>
             <el-button type="success" plain size="small" @click="handleTraceDialog"
-                       :disabled="!isConnect||tracking.disabled">寻迹
+                       :disabled="!isConnect||tracking.disabled">路径追踪
             </el-button>
-            <el-button type="primary" plain size="small" @click="handleParallelDrive"
-                       :disabled="!isConnect||operating.disabled">驾驶
-            </el-button>
+<!--            <el-button type="primary" plain size="small" @click="handleParallelDrive"-->
+<!--                       :disabled="!isConnect||operating.disabled">驾驶-->
+<!--            </el-button>-->
             <el-button type="warning" plain size="small" @click="handleStandby"
                        :disabled="!isConnect||standby.disabled">停止
             </el-button>
-            <el-button type="danger" plain size="small" @click="handleShutdown"
-                       :disabled="!isConnect||shutdown.disabled">关机
-            </el-button>
+<!--            <el-button type="danger" plain size="small" @click="handleShutdown"-->
+<!--                       :disabled="!isConnect||shutdown.disabled">关机-->
+<!--            </el-button>-->
             <el-divider direction="vertical"></el-divider>
           </el-col>
           <div style="margin-top: 10px;float: right;margin-right: 10px">
@@ -97,24 +97,24 @@
             <el-tab-pane label="寻迹路线" :style="{height:winHeight-240+'px'}">
               <trace-monitor :cId="channelId+'-trace'"></trace-monitor>
             </el-tab-pane>
-            <el-tab-pane label="监控视频" :style="{height:winHeight-240+'px'}">
-              <video-monitor :cId="channelId+'-video'"></video-monitor>
-            </el-tab-pane>
+<!--            <el-tab-pane label="监控视频" :style="{height:winHeight-240+'px'}">-->
+<!--              <video-monitor :cId="channelId+'-video'"></video-monitor>-->
+<!--            </el-tab-pane>-->
           </el-tabs>
         </el-col>
         <el-col :lg="5" style="height: 100%;overflow-y: auto">
-          <el-row style="height: 220px; margin: 6px">
-            <div class="metric-chart" id="leftVelocityChart"></div>
-          </el-row>
-          <el-row style="height: 220px; margin: 6px">
-            <div class="metric-chart" id="rightVelocityChart"></div>
-          </el-row>
+<!--          <el-row style="height: 220px; margin: 6px">-->
+<!--            <div class="metric-chart" id="leftVelocityChart"></div>-->
+<!--          </el-row>-->
+<!--          <el-row style="height: 220px; margin: 6px">-->
+<!--            <div class="metric-chart" id="rightVelocityChart"></div>-->
+<!--          </el-row>-->
           <el-row style="height: 220px; margin: 6px">
             <div class="metric-chart" id="velocityChart"></div>
           </el-row>
-          <el-row style="height: 220px; margin: 6px">
-            <div class="metric-chart" id="powerChart"></div>
-          </el-row>
+<!--          <el-row style="height: 220px; margin: 6px">-->
+<!--            <div class="metric-chart" id="powerChart"></div>-->
+<!--          </el-row>-->
         </el-col>
 
       </el-row>
@@ -650,19 +650,19 @@ export default {
         this.signal = parseInt(event['body'])
       }
       // 左侧履带车速事件处理器
-      this.eventHandlers['left-track-velocity'] = async event => {
-        if (leftVelocityOption != null && leftVelocityChart != null) {
-          leftVelocityOption.series[0].data[0].value = parseFloat(event['body'])
-          leftVelocityChart.setOption({ series: leftVelocityOption.series })
-        }
-      }
+      // this.eventHandlers['left-track-velocity'] = async event => {
+      //   if (leftVelocityOption != null && leftVelocityChart != null) {
+      //     leftVelocityOption.series[0].data[0].value = parseFloat(event['body'])
+      //     leftVelocityChart.setOption({ series: leftVelocityOption.series })
+      //   }
+      // }
       // 右侧履带车速事件处理器
-      this.eventHandlers['right-track-velocity'] = async event => {
-        if (rightVelocityOption != null && rightVelocityChart != null) {
-          rightVelocityOption.series[0].data[0].value = parseFloat(event['body'])
-          rightVelocityChart.setOption({ series: rightVelocityOption.series })
-        }
-      }
+      // this.eventHandlers['right-track-velocity'] = async event => {
+      //   if (rightVelocityOption != null && rightVelocityChart != null) {
+      //     rightVelocityOption.series[0].data[0].value = parseFloat(event['body'])
+      //     rightVelocityChart.setOption({ series: rightVelocityOption.series })
+      //   }
+      // }
 
       // 车速事件处理器
       this.eventHandlers['velocity'] = async event => {
@@ -673,12 +673,12 @@ export default {
       }
 
       // 电量事件处理器
-      this.eventHandlers['power'] = async event => {
-        if (powerOption != null && powerChart != null) {
-          powerOption.series[0].data[0].value = parseInt(event['body'])
-          powerChart.setOption({ series: powerOption.series })
-        }
-      }
+      // this.eventHandlers['power'] = async event => {
+      //   if (powerOption != null && powerChart != null) {
+      //     powerOption.series[0].data[0].value = parseInt(event['body'])
+      //     powerChart.setOption({ series: powerOption.series })
+      //   }
+      // }
 
       // 上线事件
       this.eventHandlers['online'] = async event => {
@@ -698,10 +698,10 @@ export default {
       }
     },
     initCharts() {
-      this.createLeftVelocityChart()
-      this.createRightVelocityChart()
+      // this.createLeftVelocityChart()
+      // this.createRightVelocityChart()
       this.createVelocityChart()
-      this.createPowerChart()
+      // this.createPowerChart()
     },
     createLeftVelocityChart() {
       leftVelocityOption = {
@@ -923,7 +923,7 @@ export default {
             radius: '98%',
             data: [{ value: 0, name: '车速' }],
             min: 0,
-            max: 2
+            max: 20
           }
         ]
       }
