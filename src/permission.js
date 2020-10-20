@@ -29,7 +29,8 @@ router.beforeEach(async (to, from, next) => {
     /* has no token*/
     // other pages that do not have permission to access are redirected to the login page.
     // 单点登录
-    ssoLogin()
+    next()
+    // ssoLogin()
     NProgress.done()
   }
 

@@ -16,9 +16,9 @@
 <!--          <a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">-->
 <!--            <el-dropdown-item>Github</el-dropdown-item>-->
 <!--          </a>-->
-          <el-dropdown-item  @click.native="logout">
-            <span style="display:block;">退出</span>
-          </el-dropdown-item>
+<!--          <el-dropdown-item  @click.native="logout">-->
+<!--            <span style="display:block;">退出</span>-->
+<!--          </el-dropdown-item>-->
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -42,7 +42,7 @@ export default {
     ])
   },
   created(){
-      this.$store.dispatch('user/getInfo')
+      // this.$store.dispatch('user/getInfo')
   },
   methods: {
     toggleSideBar() {
