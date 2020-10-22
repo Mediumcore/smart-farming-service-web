@@ -667,7 +667,8 @@ export default {
       // 车速事件处理器
       this.eventHandlers['velocity'] = async event => {
         if (velocityOption != null && velocityChart != null) {
-          velocityOption.series[0].data[0].value = parseFloat(event['body'])
+          // 将m/s转换为km/h
+          velocityOption.series[0].data[0].value = (parseFloat(event['body'])*3.6).toFixed(2)
           velocityChart.setOption({ series: velocityOption.series })
         }
       }
